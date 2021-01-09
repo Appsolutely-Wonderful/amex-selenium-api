@@ -17,7 +17,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.common.exceptions import NoSuchElementException
 from time import time, sleep
-from transaction import Transaction
+from amex_transaction import AmexTransaction
 
 class AmexAPI:
     """
@@ -132,28 +132,20 @@ class AmexAPI:
                 elements = self.driver.find_elements_by_xpath("//div[contains(@id, 'transaction_')]")
         transactions = []
         for el in elements:
-            pieces = el.text.split('\n')
-            # idx 0 - date
-            # idx 1 - Pending or Merchant
-            # idx 2 - If pending: merchant, else amount
-            # idx 3 - If pending: amount, else out of bounds
-            pending = pieces[1] == 'Pending'
-            date = pieces[0]
-            if not pending:
-                merchant = pieces[1]
-                amount = pieces[2]
-            else:
-                merchant = pieces[2]
-                amount = pieces[3]
-            transactions.append(Transaction(date=date, merchant=merchant, amount=amount, pending=pending))
+            transaction = AmexTransaction(el)
+            transactions.append(transaction)
         return transactions
 
 
-    def get_transactions(self, since_date):
+    def get_recent_transactions(self):
         """
         Retrieve all cleared transactions starting at since_date
 
         Pre-requisites: Must first execute login
         """
         self._navigate_to_transactions()
-        transactions = self._retrieve_transactions()
+        transactions = self._retrieve_recent_transactions()
+        # Transactions are displayed and retrieved newest to oldest.
+        # So reverse the list so the list is "sorted"
+        transactions.reverse()
+        return transactions
