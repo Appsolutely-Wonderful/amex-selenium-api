@@ -1,3 +1,5 @@
 amex_env
 bin
 amex.py
+__pycache__
+creds.py
