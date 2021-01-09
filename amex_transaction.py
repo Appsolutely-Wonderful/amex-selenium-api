@@ -42,7 +42,5 @@ class AmexTransaction:
         clean_str = clean_str.replace(",", "")
         self.amount = float(clean_str)
 
-
-
     def __repr__(self):
         return f"{self.date} | {self.merchant} | ${self.amount}"
