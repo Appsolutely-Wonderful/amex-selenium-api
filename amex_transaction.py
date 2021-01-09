@@ -27,10 +27,19 @@ class AmexTransaction:
         pending = pieces[1] == 'Pending'
         if not pending:
             self.merchant = pieces[1]
-            self.amount = pieces[2]
+            self._set_amount(pieces[2])
         else:
             self.merchant = pieces[2]
-            self.amount = pieces[3]
+            self._set_amount(pieces[3])
+
+    def _set_amount(self, amount_str):
+        """
+        Sets the amount field on the object as a float
+        """
+        # remove $ sign and cast to float
+        self.amount = float(amount_str[1:])
+
+
 
     def __repr__(self):
         return f"{self.date} - {self.merchant} - {self.amount}"
