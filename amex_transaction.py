@@ -37,9 +37,12 @@ class AmexTransaction:
         Sets the amount field on the object as a float
         """
         # remove $ sign and cast to float
-        self.amount = float(amount_str[1:])
+        clean_str = amount_str[1:]
+        # remove commas from string
+        clean_str = clean_str.replace(",", "")
+        self.amount = float(clean_str)
 
 
 
     def __repr__(self):
-        return f"{self.date} - {self.merchant} - {self.amount}"
+        return f"{self.date} | {self.merchant} | ${self.amount}"

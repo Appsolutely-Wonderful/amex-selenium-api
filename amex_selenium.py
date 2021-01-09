@@ -35,7 +35,7 @@ class AmexAPI:
         Initializes the selenium driver
         """
         opts = Options()
-        # opts.set_headless()
+        opts.set_headless()
         self.driver = webdriver.Firefox(options=opts)
 
     def close(self):
