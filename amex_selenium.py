@@ -29,7 +29,7 @@ class AmexAPI:
     PASSWORD_FIELD_ID = "eliloPassword"
     LOGIN_BTN_ID = "loginSubmit"
     EXPECTED_TITLE_CONTENTS = "American Express"
-    timeout = 30 # seconds
+    timeout = 45 # seconds
     def __init__(self):
         """
         Initializes the selenium driver
@@ -106,7 +106,9 @@ class AmexAPI:
         """
         Navigate to Amex transactions page
         """
-        self.driver.get(self.TRANSACTIONS_URL)
+        elements = self.driver.find_elements_by_xpath("//a[contains(text(), 'View Transactions')]")
+        assert len(elements) == 1
+        elements[0].click()
         self._wait_for_load(By.ID, 'select-all-transactions')
 
     def _click_skip_tour_if_popup(self):
