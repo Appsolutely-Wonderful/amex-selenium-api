@@ -111,6 +111,15 @@ class AmexAPI:
         elements[0].click()
         self._wait_for_load(By.ID, 'select-all-transactions')
 
+    def _navigate_to_recent_transactions(self):
+        """
+        Navigates to the recent transactions page
+        Apparently the "All" transactions stops showing recent transactions
+        near the end of the billing period.
+        """
+        self.driver.get(self.TRANSACTIONS_URL)
+        self._wait_for_load(By.ID, 'select-all-transactions')
+
     def _click_skip_tour_if_popup(self):
         try:
             el = self.driver.find_element_by_id('skip-link-0')
@@ -145,9 +154,14 @@ class AmexAPI:
 
         Pre-requisites: Must first execute login
         """
+        # Get transactions from the billing period
         self._navigate_to_transactions()
-        transactions = self._retrieve_recent_transactions()
+        period_transactions = self._retrieve_recent_transactions()
+        # Get "recent" transactions
+        self._navigate_to_recent_transactions()
+        recent_transactions = self._retrieve_recent_transactions()
         # Transactions are displayed and retrieved newest to oldest.
         # So reverse the list so the list is "sorted"
+        transactions = period_transactions + recent_transactions
         transactions.reverse()
         return transactions
