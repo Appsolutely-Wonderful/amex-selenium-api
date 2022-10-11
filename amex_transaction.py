@@ -7,6 +7,14 @@ class AmexTransaction:
     def __init__(self, element):
         self._decode_html_element(element)
 
+    def _find_and_set_amount(self, start_idx, pieces):
+        for i in range(start_idx, len(pieces)):
+            try:
+                self._set_amount(pieces[i])
+                break
+            except ValueError:
+                continue
+
     def _decode_html_element(self, element):
         """
         Fills in class properties with information from the given element.
@@ -34,18 +42,10 @@ class AmexTransaction:
         self.credit = pieces[1] == 'Credit'
         if not pending and not self.credit:
             self.merchant = pieces[1]
-            try:
-                self._set_amount(pieces[2])
-            # Value error occurs if value is not a # (it's a tag)
-            except ValueError:
-                self._set_amount(pieces[3])
+            self._find_and_set_amount(2, pieces)
         else:
             self.merchant = pieces[2]
-            try:
-                self._set_amount(pieces[3])
-            # Value error occurs if value is not a # (it's a tag)
-            except ValueError:
-                self._set_amount(pieces[4])
+            self._find_and_set_amount(3, pieces)
 
     def _set_amount(self, amount_str):
         """
