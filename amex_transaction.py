@@ -62,3 +62,17 @@ class AmexTransaction:
 
     def __repr__(self):
         return f"{self.date} | {self.merchant} | ${self.amount}"
+
+    def __eq__(self, obj):
+        if isinstance(obj, AmexTransaction) and self._matching(self, obj):
+            return True
+        return False
+
+    def _matching(self, a, b):
+        """
+        Check if transactions match
+        """
+        if a.date == b.date and a.merchant == b.merchant and a.amount == b.amount:
+            return True
+        return False
+
