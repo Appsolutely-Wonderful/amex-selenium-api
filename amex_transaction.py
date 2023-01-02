@@ -30,6 +30,14 @@ class AmexTransaction:
         # idx 0 - date
         self.date = datetime.strptime(pieces[0] + " " + str(this_year), "%b %d %Y")
 
+        # Correct the date for the new year
+        # If it's a new year and the current month is january or february,
+        # then correct any december dates to be from the previous year
+        this_date = datetime.now()
+        if (this_date.month <= 2 and self.date.month >= 11):
+            year = this_date.year - 1
+            self.date = datetime.strptime(pieces[0] + " " + str(year), "%b %d %Y")
+
         # idx 1 - (Pending or Credit) or Merchant
         # TODO: This should probably be optimized to grab specific elements instead of
         #       trying to string parse the whole array
